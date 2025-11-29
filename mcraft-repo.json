@@ -3,7 +3,7 @@
         {
             "name": "viggle-by.chipmunkmod",
             "version": "1.0.0",
-            "scriptMainUnstable": true,
+            "serverPlugin": true,
             "description": "Port Of ChipmunkMod to mcraft.fun"
         }
     ]
