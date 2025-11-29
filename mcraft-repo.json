@@ -2,9 +2,9 @@
     "packages": [
         {
             "name": "viggle-by.chipmunkmod",
-            "version": "0.0.5",
+            "version": "1.0.0",
             "scriptMainUnstable": true,
-            "description": "WAILA - block/entity cursor info"
+            "description": "Port Of ChipmunkMod to mcraft.fun"
         }
     ]
 }
