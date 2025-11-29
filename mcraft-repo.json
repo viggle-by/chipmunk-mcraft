@@ -1,0 +1,10 @@
+{
+    "packages": [
+        {
+            "name": "viggle-by.chipmunkmod",
+            "version": "0.0.5",
+            "scriptMainUnstable": true,
+            "description": "WAILA - block/entity cursor info"
+        }
+    ]
+}
