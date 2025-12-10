@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mcraft + ChipmunkMod Loader</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    iframe#mcraftFrame {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <iframe
+    id="mcraftFrame"
+    allowfullscreen
+    allow="microphone *; camera *; display-capture *; autoplay *; clipboard-write *; clipboard-read *; xr-spatial-tracking *;"
+    src="https://mcraft.fun?parentFrameMods=1">
+  </iframe>
+
+  <script type="module">
+    // -----------------------------
+    // Original-style ChipmunkMod
+    // -----------------------------
+    const chipmunkMod = {
+      name: 'chipmunkmod',
+      version: '0.2.0',
+      enabled: true,
+      description: 'ChipmunkMod custom chat for Mcraft',
+      author: 'yourname',
+      scriptMainUnstable: await fetch('dist/chipmunkmod.js')
+        .then(res => res.text())
+        .then(text => text.replace('//# sourceURL=dist/chipmunkmod.js', '')),
+    };
+
+    // -----------------------------
+    // Constants for postMessage
+    // -----------------------------
+    const MODS_REQUEST_MESSAGE = "MC_MODS_REQUEST";
+    const MODS_RESPONSE_MESSAGE = "MC_MODS_RESPONSE";
+
+    // -----------------------------
+    // Listen for mod requests from iframe
+    // -----------------------------
+    window.addEventListener('message', async function(event) {
+      // Verify origin
+      if (!event.origin.includes('mcraft.fun')) return;
+
+      const { data } = event;
+
+      // Check if this is a mod request
+      if (data && typeof data === 'object' && data.type === MODS_REQUEST_MESSAGE) {
+        const iframe = document.getElementById('mcraftFrame');
+
+        // Send mods response back to iframe
+        iframe.contentWindow.postMessage({
+          type: MODS_RESPONSE_MESSAGE,
+          mods: [chipmunkMod]
+        }, '*');
+      }
+    });
+
+    // Optional: automatically inject mod into iframe on load (OG loader)
+    const iframe = document.getElementById('mcraftFrame');
+    iframe.addEventListener('load', () => {
+      if (!chipmunkMod.enabled) return;
+
+      // Inject mod script into iframe
+      iframe.contentWindow.eval(chipmunkMod.scriptMainUnstable);
+
+      // Initialize ChipmunkMod
+      iframe.contentWindow.initChipmunkMod?.({
+        prefix: "[ZEN]",
+        prefixColor: "#726CF7",
+        usernameColor: "#726CF7",
+        messageColor: "#C8E6EA",
+        prefixUrl: "https://zenzoya.netlify.app/",
+        prefixHover: "Click to go to my Website :3",
+        messageHover: "Click to copy message to clipboard!",
+      });
+
+      console.log("ChipmunkMod loaded in iframe via OG loader!");
+    });
+  </script>
+
+</body>
+</html>
